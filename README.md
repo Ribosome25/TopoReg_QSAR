@@ -25,6 +25,10 @@ During experiments, csv format files became a burden to storage space and IO spe
 
 `chembl_pipeline_cv` and `chembl_pipeline_cv_disjoint` for TR and TR* respectively. Scripts are run as descripted in `4_modeling_pipeline.sh`. 
 
+### ChemProp
+
+Parameter tuning: 20 targets (datasets) are randomly selected with `scripts/ChEMBL/sample_dataset_for_chemprop_hypertune.py`, the selection results are saved as `sampled_targets_for_chemprop_hypertune.txt`. Hyperparameter search is performed based on ChemProp's hypertuning function, as in `5_chemprop_hypertune.sh`. 
+
 
 
 ## Notes on model metrics
