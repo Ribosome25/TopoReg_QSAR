@@ -21,6 +21,10 @@ Code and explanation for TF3P are available at [Ribosome25/TF3P: Three-dimension
 
 During experiments, csv format files became a burden to storage space and IO speed. All data, intermediate files were converted to parquet format. Checkout `3_convert_csv_to_parquet` to see more conversion details. 
 
+### TR modeling
+
+`chembl_pipeline_cv` and `chembl_pipeline_cv_disjoint` for TR and TR* respectively. Scripts are run as descripted in `4_modeling_pipeline.sh`. 
+
 
 
 ## Notes on model metrics
