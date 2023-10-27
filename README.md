@@ -1,34 +1,21 @@
 # TopoReg_QSAR
-Code repository for paper Topological Regression in Quantitative Structure-Activity Relationship Modeling
+
+## Introduction
+This code repository contains example code for the paper Topological Regression in Quantitative Structure-Activity Relationship Modeling. Quantitative structure-activity relationship (QSAR) modeling is a powerful tool used in drug discovery, yet the lack of interpretability of commonly used QSAR models hinders their application in molecular design. 
+We proposed a similarity-based regression framework, topological regression (TR), that offers a statistically grounded, computationally fast, and interpretable technique. TR provides predictive performance that competes with deep-learning methods, such as Transformer-CNN, as well as informative visualizations, which can help guide lead optimization in drug discovery. 
+
+In this package, we provide Python files for TR, Ensemble TR, k-Nearest-Neighbor Graph Visualization, and Lead optimization pathway visualization, as well as sample ChEMBL datasets and the code to extract all datasets used in the paper.
 
 
+## Installation
+Requirements:
+Installation:
 
 
+## Demo
 
-## Experimental steps
 
-### Download data from ChEMBL and generate descriptors
-
-`1_download_process_descgen.sh`. 
-
-### Generate TF3P 3D fingerprints
-
-`2_tf3p.sh`
-
-Code and explanation for TF3P are available at [Ribosome25/TF3P: Three-dimensional force fields fingerprints (github.com)](https://github.com/Ribosome25/TF3P)   forked from [CanisW/TF3P: Three-dimensional force fields fingerprints (github.com)](https://github.com/CanisW/TF3P) and modifications were made to generate 3D FPs. Pretrained model is provided by the original authors on request. 
-
-### Data format conversion
-
-During experiments, csv format files became a burden to storage space and IO speed. All data, intermediate files were converted to parquet format. Checkout `3_convert_csv_to_parquet` to see more conversion details. 
-
-### TR modeling
-
-`chembl_pipeline_cv` and `chembl_pipeline_cv_disjoint` for TR and TR* respectively. Scripts are run as descripted in `4_modeling_pipeline.sh`. 
-
-### ChemProp
-
-Parameter tuning: 20 targets (datasets) are randomly selected with `scripts/ChEMBL/sample_dataset_for_chemprop_hypertune.py`, the selection results are saved as `sampled_targets_for_chemprop_hypertune.txt`. Hyperparameter search is performed based on ChemProp's hypertuning function, as in `5_chemprop_hypertune.sh`. 
-
+## Citation
 
 
 ## Notes on model metrics
