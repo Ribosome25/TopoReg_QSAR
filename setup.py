@@ -20,7 +20,6 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
-        'json', 'pandas', 'numpy', 'scipy', 'scikit-learn'
     ],
     python_requires='>=3.8'
     )

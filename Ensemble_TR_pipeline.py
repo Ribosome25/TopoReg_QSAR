@@ -70,9 +70,9 @@ def Ensemble_TR_pipeline_scaffold(args: ChemblPipelineArgsEnsemble):
     distance = pairwise_distances(ecfp4.values, metric="jaccard", n_jobs=-1)
     distance = pd.DataFrame(distance, index=ecfp4.index, columns=ecfp4.index)
     
-    Ks = np.random.normal(args.mean_k,args.std_k,args.num_TR_models)
-    Ks[Ks<0.3]=0.300
-    Ks[Ks>0.9]=0.900
+    anchor_percentages = np.random.normal(args.mean_anchor_percentage,args.std_anchor_percentage,args.num_TR_models)
+    anchor_percentages[anchor_percentages<0.3]=0.300
+    anchor_percentages[anchor_percentages>0.9]=0.900
     with open(args.path+"scaffold_split_index.json", 'r') as f:
         index = json.load(f)  
     train_idx = index['train_idx']
@@ -82,9 +82,9 @@ def Ensemble_TR_pipeline_scaffold(args: ChemblPipelineArgsEnsemble):
     
     
     preds = []
-    for k in Ks:
+    for anchor_percentage in anchor_percentages:
         mdl =LR(n_jobs=-1)
-        anchors_idx = distance.loc[train_idx].sample(frac=k).index
+        anchors_idx = distance.loc[train_idx].sample(frac=anchor_percentage).index
         if len(anchors_idx) > 2000:  # if takes too long. 
             anchors_idx = distance.loc[train_idx].sample(n=2000).index
             
@@ -120,9 +120,9 @@ def Ensemble_TR_pipeline_cv(args: ChemblPipelineArgsEnsemble):
     distance = pairwise_distances(ecfp4.values, metric="jaccard", n_jobs=-1)
     distance = pd.DataFrame(distance, index=ecfp4.index, columns=ecfp4.index)
     
-    Ks = np.random.normal(args.mean_k,args.std_k,args.num_TR_models)
-    Ks[Ks<0.3]=0.300
-    Ks[Ks>0.9]=0.900
+    anchor_percentages = np.random.normal(args.mean_anchor_percentage,args.std_anchor_percentage,args.num_TR_models)
+    anchor_percentages[anchor_percentages<0.3]=0.300
+    anchor_percentages[anchor_percentages>0.9]=0.900
     
     kf = KFold(n_splits=args.cv_fold, shuffle=True, random_state=args.seed)
     fold = 1
@@ -133,9 +133,9 @@ def Ensemble_TR_pipeline_cv(args: ChemblPipelineArgsEnsemble):
         test_idx = target.index[test_i]
         
         preds = []
-        for k in Ks:
+        for anchor_percentage in anchor_percentages:
             mdl =LR(n_jobs=-1)
-            anchors_idx = distance.loc[train_idx].sample(frac=k).index
+            anchors_idx = distance.loc[train_idx].sample(frac=anchor_percentage).index
             if len(anchors_idx) > 2000:  # if takes too long. 
                 anchors_idx = distance.loc[train_idx].sample(n=2000).index
                 

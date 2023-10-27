@@ -78,7 +78,7 @@ def TR_pipeline_scaffold(args: ChemblPipelineArgs):
     
     
     mdl =LR(n_jobs=-1)
-    anchors_idx = distance.loc[train_idx].sample(frac=args.k).index
+    anchors_idx = distance.loc[train_idx].sample(frac=args.anchor_percentage).index
     if len(anchors_idx) > 2000:  # if takes too long. 
         anchors_idx = distance.loc[train_idx].sample(n=2000).index
         
@@ -121,7 +121,7 @@ def TR_pipeline_cv(args: ChemblPipelineArgs):
         test_idx = target.index[test_i]
 
         mdl =LR(n_jobs=-1)
-        anchors_idx = distance.loc[train_idx].sample(frac=args.k).index
+        anchors_idx = distance.loc[train_idx].sample(frac=args.anchor_percentage).index
         if len(anchors_idx) > 2000:  # if takes too long. 
             anchors_idx = distance.loc[train_idx].sample(n=2000).index
             
