@@ -2,7 +2,8 @@ import json
 import numpy as np
 import pandas as pd
 import random 
-from scripts.args import ChemblPipelineVisualizationArgs
+from utils.args import ChemblNNVisualizationArgs
+from utils.topoReg import simple_y_train
 from sklearn.linear_model import LinearRegression as LR
 from sklearn.metrics import pairwise_distances
 from scipy.stats import spearmanr
@@ -15,15 +16,6 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from warnings import warn
 
-def simple_y_train(response, anchors_idx, metric, train_idx=None):
-    anchors_response = response.loc[anchors_idx]
-    if train_idx is not None:
-        response = response.loc[train_idx]
-    if response.ndim == 1:
-        response = response.values.reshape(-1, 1)
-        anchors_response = anchors_response.values.reshape(-1, 1)
-    response_dist = pairwise_distances(anchors_response, response, metric=metric)
-    return response_dist
 
 def generate_graph_from_edges(edges,distance,le,threshold):
     G=nx.Graph() #create the graph and add edges
@@ -124,7 +116,7 @@ def visualize_NN_test_predictions(args):
     idx_stacked_knn = np.vstack([train_idx] * len(test_idx))
     top_idx_rawMLKR  = np.take_along_axis(idx_stacked_knn, ranks_rawMLKR, axis=1)[:, :args.k]
     
-    # Color plot definitions
+    # Color bar definitions
     vmin = min(target)
     vmax = max(target)
     cmap=plt.cm.viridis
@@ -133,7 +125,8 @@ def visualize_NN_test_predictions(args):
     fig1 = plt.figure(figsize=(5/6*30, 5/6*10))
     sub_i = 133
     ax = fig1.add_subplot(sub_i)
-    # Label encoder to transform between integer node names and chembl molecule names
+    
+    # Label encoder to map between integer node names and chembl molecule names
     le=LabelEncoder()
     le.fit(data.index)
     # Find all edges of KNN graph using TR NN predictions
@@ -192,11 +185,12 @@ def visualize_NN_test_predictions(args):
     cbar.vmax=vmax
     fig1.tight_layout()
     fig1.subplots_adjust(left=0.00, bottom=0.00, top=0.88, right=0.96, wspace=0.1)
+    fig1.savefig('visualize_NN_predictions_'+args.path.strip("/").split("/")[-1]+".png",dpi=300)
 
 
 
 if __name__ == "__main__":
-    args = ChemblPipelineVisualizationArgs().parse_args()
+    args = ChemblNNVisualizationArgs().parse_args()
     np.random.seed(args.seed)
     visualize_NN_test_predictions(args)
     
