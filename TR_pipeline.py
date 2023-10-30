@@ -6,7 +6,7 @@ from utils.topoReg import simple_y_train, rbf
 from sklearn.linear_model import LinearRegression as LR
 from sklearn.metrics import pairwise_distances
 from scipy.stats import spearmanr
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import KFold
 from warnings import warn
 
