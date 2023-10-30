@@ -115,7 +115,7 @@ def TR_pipeline_cv(args: ChemblPipelineArgs):
         
 
 if __name__ == "__main__":
-    args = ChemblPipelineArgs().parse_args()
+    args = ChemblPipelineArgs()
     np.random.seed(args.seed)
     if args.split == 'scaffold':
         TR_pipeline_scaffold(args)

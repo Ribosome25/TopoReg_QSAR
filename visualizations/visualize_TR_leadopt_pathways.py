@@ -193,7 +193,7 @@ def visualize_TR_leadopt(args):
 
 
 if __name__ == "__main__":
-    args = ChemblLeadOptVisualizationArgs().parse_args()
+    args = ChemblLeadOptVisualizationArgs()
     np.random.seed(args.seed)
     visualize_TR_leadopt(args)
     

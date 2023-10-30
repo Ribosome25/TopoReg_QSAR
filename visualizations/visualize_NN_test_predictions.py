@@ -187,7 +187,7 @@ def visualize_NN_test_predictions(args):
 
 
 if __name__ == "__main__":
-    args = ChemblNNVisualizationArgs().parse_args()
+    args = ChemblNNVisualizationArgs()
     np.random.seed(args.seed)
     visualize_NN_test_predictions(args)
     
