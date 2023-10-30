@@ -35,6 +35,16 @@ cv_fold: int=5  # number of folds in cross-validation
 anchor_percentage: float=0.5    # Anchor point percentage
 rbf_gamma: float=0.5    # gamma for RBF reconstruction
 ```
+### Expected Output and Runtimes with default parameters
+Running the TR_pipeline.py with default parameters will output the following:
+```
+Scaffold TR Performance
+Spearman: 0.8345442589034985
+R2: 0.8614466743805971
+RMSE: 0.6902920473802862
+NRMSE: 0.3722275186218812
+```
+Expected runtime: 554 ms ± 9.41 ms per loop (mean ± std. dev. of 7 runs)
 ## Ensemble TR Demo
 Similarly to above, Ensemble TR can be trained and evaluated by running the 'Ensemble_TR_pipeline.py' file
 ### Parameters (Defaults)
@@ -50,7 +60,16 @@ std_anchor_percentage: float=0.2     # std of anchor point percentage for TR ens
 num_TR_models = 30   # Number of TR models included in the ensemble
 rbf_gamma: float=0.5    # gamma for RBF reconstruction
 ```
-
+### Expected Output and Runtimes with default parameters
+Running the TR_pipeline.py with default parameters will output the following:
+```
+Scaffold Ensemble TR Performance
+Spearman: 0.8436241650085896
+R2: 0.8859742016491053
+RMSE: 0.6262185866794664
+NRMSE: 0.33767706222202104
+```
+Expected runtime: 957 ms ± 14 ms per loop (mean ± std. dev. of 7 runs)
 ## Visualizations
 The visualizations folder contains scripts to regenerate the figures in the main manuscript of the TR paper. 
 ### Nearest-Neighbor Prediction Visualization
@@ -65,12 +84,14 @@ cv_fold: int=5  # number of folds in cross-validation
 anchor_percentage: float=0.8    # Anchor point percentage
 k: int=5             # k for k-NN prediction visualization
 ```
-For example, running the following:
+For example, running the following from the visualization folder:
 ```
 visualize_NN_test_predictions.py
 ```
 will generate and save the following image to the visualization folder:
 ![NN Predictions](https://github.com/Ribosome25/TopoReg_QSAR/blob/main/visualizations/visualize_NN_predictions_CHEMBL2734.png)
+Expected runtime: 1min 24s ± 548 ms per loop (mean ± std. dev. of 7 runs) (Takes longer due to MLKR predictions)
+
 ### TR Lead Optimization Visualization
 To visualize lead optimization pathways in the training predictions made by TR, run the 'visualize_TR_leadopt_pathways.py' file with the following default input arguments
 ```
@@ -83,13 +104,13 @@ To visualize lead optimization pathways in the training predictions made by TR, 
   anchor_percentage: float=0.9   # Anchor point percentage
   k: int=5             # k for k-NN prediction visualization
 ```
-For example, running the following:
+For example, running the following from the visualization folder:
 ```
 visualize_TR_leadopt_pathways.py
 ```
 Will generate and save the following image to the visualization folder:
 ![NN Predictions](https://github.com/Ribosome25/TopoReg_QSAR/blob/main/visualizations/lead_opt_pathway_CHEMBL278.png)
-
+Expected runtime: 3.08 s ± 8.17 ms per loop (mean ± std. dev. of 7 runs)
 ## Data Extraction
 To extract all ChEMBL data [1] used in the manuscript, please see the DataExtraction folder.
 
