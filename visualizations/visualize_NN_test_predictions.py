@@ -48,7 +48,7 @@ def visualize_NN_test_predictions(args):
 
     # Get split indicies based on input argument
     if args.split == 'cv':
-        cv_fold = 5
+        cv_fold = args.cv_fold
         # split data
         kf = KFold(n_splits=cv_fold, shuffle=True, random_state=args.seed)
         for train_i, test_i in kf.split(target):
