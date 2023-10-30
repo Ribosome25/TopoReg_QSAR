@@ -12,7 +12,7 @@ class ChemblPipelineArgs():
         parser.add_argument('cv_fold', type=int, default=5) # number of folds in cross-validation
         parser.add_argument('anchor_percentage', type=float, default=0.5)   # Anchor point percentage
         parser.add_argument('rbf_gamma', type=float, default=0.5)   # gamma for RBF reconstruction
-        return parser
+        return parser.parse_args()
 class ChemblPipelineArgsEnsemble():
     def parse_args(self):
         parser = argparse.ArgumentParser(description='Ensemble_TR_pipeline.py')
@@ -25,7 +25,7 @@ class ChemblPipelineArgsEnsemble():
         parser.add_argument('mean_anchor_percentage', type=float, default=0.6)   # mean anchor point percentage for TR ensemble
         parser.add_argument('std_anchor_percentage', type=float, default=0.2)    # std of anchor point percentage for TR ensemble
         parser.add_argument('num_TR_models', type=int, default= 30 )  # Number of TR models included in ensemble
-        return parser
+        return parser.parse_args()
 class ChemblNNVisualizationArgs():
     def parse_args(self):
         parser = argparse.ArgumentParser(description='visualize_NN_test_predictions.py')
@@ -37,7 +37,7 @@ class ChemblNNVisualizationArgs():
         parser.add_argument('cv_fold', type=int, default=5) # number of folds in cross-validation
         parser.add_argument('anchor_percentage', type=float, default=0.8)   # gamma for RBF reconstruction
         parser.add_argument('k', type=int,default=5)             # k for k-NN prediction visualization
-        return parser
+        return parser.parse_args()
 class ChemblLeadOptVisualizationArgs():
     def parse_args(self):
         parser = argparse.ArgumentParser(description='TR_leadopt_pathways.py')
@@ -49,3 +49,4 @@ class ChemblLeadOptVisualizationArgs():
         parser.add_argument('cv_fold', type=int, default=5) # number of folds in cross-validation
         parser.add_argument('anchor_percentage', type=float, default=0.9)   # gamma for RBF reconstruction
         parser.add_argument('k', type=int,default=5)             # k for k-NN prediction visualization
+        return parser.parse_args()
