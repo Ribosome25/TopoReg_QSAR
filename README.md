@@ -89,5 +89,11 @@ visualize_TR_leadopt_pathways.py
 ```
 Will generate and save the following image to the visualization folder:
 ![NN Predictions](https://github.com/Ribosome25/TopoReg_QSAR/blob/main/visualizations/lead_opt_pathway_CHEMBL278.png)
+
+## Data Extraction
+To extract all ChEMBL data [1] used in the manuscript, please see the DataExtraction folder.
+
+[1] Mendez, D., Gaulton, A., Bento, A. P., Chambers, J., De Veij, M., Félix, E., Magariños, M. P., Mosquera, J. F., Mutowo, P., Nowotka, M., Gordillo-Marañón, M., Hunter, F., Junco, L., Mugumbate, G., Rodriguez-Lopez, M., Atkinson, F., Bosc, N., Radoux, C. J., Segura-Cabrera, A., Hersey, A., … Leach, A. R. (2019). ChEMBL: towards direct deposition of bioassay data. Nucleic acids research, 47(D1), D930–D940. https://doi.org/10.1093/nar/gky1075
+
 ## Citation
 
