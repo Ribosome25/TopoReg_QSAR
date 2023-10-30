@@ -17,6 +17,7 @@ The code has been tested in Windows 10 and CentOS 8.1 with Python 3.8 or greater
 * metric-learn >= 0.6.2
 * Matplotlib >= 3.6.1
 * RDKit >= 2020.09.5
+* fastparquet >= 2023.7.0
 
 ## TR Demo
 To train and evaluate TR on a requested dataset, simply run the file 'TR_pipeline.py' with the path argument set to the path to the data folder
