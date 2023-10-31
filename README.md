@@ -93,7 +93,7 @@ k: int=5             # k for k-NN prediction visualization
 ```
 For example, running the following from the visualization folder:
 ```
-visualize_NN_test_predictions.py
+python visualize_NN_test_predictions.py
 ```
 will generate and save the following image to the visualization folder:
 ![NN Predictions](https://github.com/Ribosome25/TopoReg_QSAR/blob/main/visualizations/visualize_NN_predictions_CHEMBL2734.png)
@@ -113,7 +113,7 @@ To visualize lead optimization pathways in the training predictions made by TR, 
 ```
 For example, running the following from the visualization folder:
 ```
-visualize_TR_leadopt_pathways.py
+python visualize_TR_leadopt_pathways.py
 ```
 Will generate and save the following image to the visualization folder:
 ![NN Predictions](https://github.com/Ribosome25/TopoReg_QSAR/blob/main/visualizations/lead_opt_pathway_CHEMBL278.png)
