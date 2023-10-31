@@ -13,4 +13,4 @@
 . $HOME/conda/etc/profile.d/conda.sh
 conda activate tf-gpu 
 
-python scripts/ChEMBL/convert_data_format.py
+python scripts/ChEMBL/convert_data_format.py --work_dir data/ChEMBL/

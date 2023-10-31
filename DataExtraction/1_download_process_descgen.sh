@@ -20,7 +20,7 @@ conda activate chem
 # declare -i batch=7
 declare -i batch=$SLURM_ARRAY_TASK_ID
 
-python ~/TopoReg_QSAR/scripts/ChEMBL/download_chembl_data.py $((20*($batch-1))) $((20*$batch)) "batch$batch"
+python ~/TopoReg_QSAR/scripts/ChEMBL/batch_download_chembl_data.py $((20*($batch-1))) $((20*$batch)) "batch$batch"
 
 wd="data/ChEMBL/batch$batch"
 yourfilenames=`ls $wd`
