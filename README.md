@@ -18,7 +18,13 @@ The code has been tested in Windows 10 and CentOS 8.1 with Python 3.8 or greater
 * Matplotlib >= 3.6.1
 * RDKit >= 2020.09.5
 * fastparquet >= 2023.7.0
-
+## Conda Installation
+The dependencies can be installed using the provided environment.yml file and activated using the following commands:
+```
+conda env create --file environment.yml
+conda activate TopoReg
+```
+This typically takes around 2-4 minutes depending on various factors. 
 ## TR Demo
 To train and evaluate TR on a requested dataset, simply run the file 'TR_pipeline.py' with the path argument set to the path to the data folder
 ```
@@ -72,12 +78,12 @@ NRMSE: 0.33767706222202104
 ```
 Expected runtime: 957 ms ± 14 ms per loop (mean ± std. dev. of 7 runs)
 ## Visualizations
-The visualizations folder contains scripts to regenerate the figures in the main manuscript of the TR paper. 
+In addition to the TR pipelines, we have provided visualization scripts to regenerate the figures in the main manuscript of the TR paper. 
 ### Nearest-Neighbor Prediction Visualization
 To visualize the predictions made by TR compared to KNN and MLKR, run the 'visualize_NN_test_predictions.py' file with the following default input arguments
 ```
 # Defaults for regenerating figures from manuscript
-path: str = '../SampleDatasets/ChEMBL/CHEMBL2734/'  # the working folder that contains the data files
+path: str = 'SampleDatasets/ChEMBL/CHEMBL2734/'  # the working folder that contains the data files
 metric: str='tanimoto'  # the default distance metric to use on FPs
 split: str='cv'  # which data split to evaluate, either 'scaffold' (default) or 'cv'
 seed: int=2021  # random seed 
@@ -97,7 +103,7 @@ Expected runtime: 1min 24s ± 548 ms per loop (mean ± std. dev. of 7 runs) (Tak
 To visualize lead optimization pathways in the training predictions made by TR, run the 'visualize_TR_leadopt_pathways.py' file with the following default input arguments
 ```
   # Defaults for regenerating figures from manuscript
-  path: str = '../SampleDatasets/ChEMBL/CHEMBL278/'   # the working folder that contains the data files
+  path: str = 'SampleDatasets/ChEMBL/CHEMBL278/'   # the working folder that contains the data files
   metric: str='tanimoto'  # the default distance metric to use on FPs (ends with FP or FP4)
   split: str='cv'  # which data split to evaluate, either 'scaffold' (default) or 'cv'
   seed: int=2021  # random seed 
@@ -117,5 +123,6 @@ To extract all ChEMBL data [1] used in the manuscript, please see the DataExtrac
 
 [1] Mendez, D., Gaulton, A., Bento, A. P., Chambers, J., De Veij, M., Félix, E., Magariños, M. P., Mosquera, J. F., Mutowo, P., Nowotka, M., Gordillo-Marañón, M., Hunter, F., Junco, L., Mugumbate, G., Rodriguez-Lopez, M., Atkinson, F., Bosc, N., Radoux, C. J., Segura-Cabrera, A., Hersey, A., … Leach, A. R. (2019). ChEMBL: towards direct deposition of bioassay data. Nucleic acids research, 47(D1), D930–D940. https://doi.org/10.1093/nar/gky1075
 
+Once extracted, the results across all 530 datasets can be calculated and averaged to reproduce the provided results. The Transformer-CNN code was downloaded from [[1](https://github.com/bigchem/transformer-cnn)], and the ChemProp code was downloaded from [[2](https://github.com/chemprop/chemprop)]. All other models used the sklearn and metric-learn packages.
 ## Citation
 
