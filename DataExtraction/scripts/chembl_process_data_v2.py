@@ -80,7 +80,7 @@ def process_target_df(df: pd.DataFrame) -> pd.DataFrame:
     return r_df
 
 
-def process_target_file(args: ChemblPipelineArgs):
+def process_target_file(args):
     # execute args
     print("Process data in", args.path)
     tsv = [x for x in os.listdir(args.path) if x.endswith(".tsv")]
