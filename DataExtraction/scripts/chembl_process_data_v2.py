@@ -8,6 +8,7 @@ add the standardization.
 split for chemprop at here.
 """
 
+import argparse
 import os
 from os.path import join as pj
 import numpy as np
@@ -106,5 +107,7 @@ def process_target_file(args: ChemblPipelineArgs):
 
 
 if __name__ == "__main__":
-    args = ChemblPipelineArgs().parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--path", type=str, default="SampleDatasets/ChEMBL")
+    args = parser.parse_args()
     process_target_file(args)
