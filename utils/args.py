@@ -28,7 +28,7 @@ def ChemblPipelineArgsEnsemble():
 def ChemblNNVisualizationArgs():
     parser = argparse.ArgumentParser(description='visualize_NN_test_predictions.py')
     # Defaults for regenerating figures from manuscript
-    parser.add_argument('-path', type=str, default='../SampleDatasets/ChEMBL/CHEMBL2734/') # the working folder that contains the data files
+    parser.add_argument('-path', type=str, default='SampleDatasets/ChEMBL/CHEMBL2734/') # the working folder that contains the data files
     parser.add_argument('-metric', type=str, default='tanimoto')  # the default distance metric to use on FPs
     parser.add_argument('-split', type=str, default='cv')  # which data split to evaluate, either 'scaffold' or 'cv'
     parser.add_argument('-seed', type=int, default=2021) # random seed 
@@ -40,11 +40,11 @@ def ChemblNNVisualizationArgs():
 def ChemblLeadOptVisualizationArgs():
     parser = argparse.ArgumentParser(description='TR_leadopt_pathways.py')
     # Defaults for regenerating figures from manuscript
-    parser.add_argument('path', type=str, default='../SampleDatasets/ChEMBL/CHEMBL278/') # the working folder that contains the data files
-    parser.add_argument('metric', type=str, default='tanimoto')  # the default distance metric to use on FPs
-    parser.add_argument('split', type=str, default='cv')  # which data split to evaluate, either 'scaffold' or 'cv'
-    parser.add_argument('seed', type=int, default=2021) # random seed 
-    parser.add_argument('cv_fold', type=int, default=5) # number of folds in cross-validation
-    parser.add_argument('anchor_percentage', type=float, default=0.9)   # gamma for RBF reconstruction
-    parser.add_argument('k', type=int,default=5)             # k for k-NN prediction visualization
+    parser.add_argument('-path', type=str, default='SampleDatasets/ChEMBL/CHEMBL278/') # the working folder that contains the data files
+    parser.add_argument('-metric', type=str, default='tanimoto')  # the default distance metric to use on FPs
+    parser.add_argument('-split', type=str, default='cv')  # which data split to evaluate, either 'scaffold' or 'cv'
+    parser.add_argument('-seed', type=int, default=2021) # random seed 
+    parser.add_argument('-cv_fold', type=int, default=5) # number of folds in cross-validation
+    parser.add_argument('-anchor_percentage', type=float, default=0.9)   # gamma for RBF reconstruction
+    parser.add_argument('-k', type=int,default=5)             # k for k-NN prediction visualization
     return parser.parse_args()

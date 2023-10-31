@@ -189,7 +189,7 @@ def visualize_TR_leadopt(args):
     
     # format and save the main figure
     fig1.tight_layout()
-    fig1.savefig('lead_opt_pathway_'+args.path.strip("/").split("/")[-1]+".png",dpi=300)
+    fig1.savefig('visualizations/lead_opt_pathway_'+args.path.strip("/").split("/")[-1]+".png",dpi=300)
 
 
 if __name__ == "__main__":

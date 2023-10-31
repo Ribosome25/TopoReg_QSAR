@@ -2,13 +2,22 @@ name: TopoReg
 channels:
   - conda-forge
 dependencies:
-  - python >= 3.8
-  - numpy >= 1.23.5
-  - SciPy >= 1.10.1
-  - pandas >= 1.5.0
-  - scikit-learn >= 1.2.2
-  - networkx >= 3.1
-  - metric-learn >= 0.6.2
-  - matplotlib >= 3.6.1
-  - rdkit >= 2020.09.5
-  - fastparquet >= 2023.7.0
+  - python == 3.8.16
+  - numpy == 1.23.5
+  - SciPy == 1.10.1
+  - pandas == 1.5.0
+  - scikit-learn == 1.2.2
+  - networkx == 3.1
+  - metric-learn == 0.6.2
+  - matplotlib == 3.6.1
+  - fastparquet == 2023.7.0
+  - pip == 23.0.1
+  - zstd == 1.5.2
+  - xorg-libxau == 1.0.9
+  - wheel == 0.40.0
+  - vc14_runtime == 14.34.31931
+  - vs2015_runtime == 14.34.31931
+  - unicodedata2 == 15.0.0
+  - urllib3 == 1.26.15
+  - pip:
+       - rdkit == 2023.9.1

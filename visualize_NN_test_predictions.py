@@ -182,7 +182,7 @@ def visualize_NN_test_predictions(args):
     cbar.vmax=vmax
     fig1.tight_layout()
     fig1.subplots_adjust(left=0.00, bottom=0.00, top=0.88, right=0.96, wspace=0.1)
-    fig1.savefig('visualize_NN_predictions_'+args.path.strip("/").split("/")[-1]+".png",dpi=300)
+    fig1.savefig('visualizations/visualize_NN_predictions_'+args.path.strip("/").split("/")[-1]+".png",dpi=300)
 
 
 
