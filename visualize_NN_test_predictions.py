@@ -1,3 +1,10 @@
+"""
+This code visulizes KNN, MLKR, and TR predictions with kNN-graphs on scaffold 
+or CV split depending on input arguments, see scripts/args 
+ChemblNNVisualizationArgs for argument defaults and details
+
+@author: Daniel Nolte
+"""
 import json
 import numpy as np
 import pandas as pd
@@ -15,7 +22,18 @@ from warnings import warn
 
 
 def generate_graph_from_edges(edges,distance,le,threshold):
-    G=nx.Graph() #create the graph and add edges
+    """
+    function to generate a graph from a list of edge connections based on 
+    threshold value
+    
+    inputs: edges: list of knn predictions
+            distance: pairwise distance between samples
+            le: label encoder to transform from interger to chembl id
+            threshold: mean threshold for distance cutoff
+    return: G, the calcualted networkx graph
+    """
+    
+    G=nx.Graph()  #initialize the graph
     # For each sample, add its 5 NN edges based on threshold
     for e in edges:
         if (distance.loc[le.inverse_transform([e[0]]),le.inverse_transform([e[1]])].values <threshold)&(e[0]!=e[1]):
@@ -30,11 +48,19 @@ def generate_graph_from_edges(edges,distance,le,threshold):
             G.add_edge(e[0],e[5])
     return G
 
-def visualize_NN_test_predictions(args):
+def visualize_NN_test_predictions(args: ChemblNNVisualizationArgs):
+    """
+    Function to visualize kNN, MLKR, and TR test predictions 
+    in the form of kNN-grpahs
+    
+    input args: ChemblNNVisualizationArgs
+    
+    saves a figure with 3 subplots, each with kNN predictions shown
+    """
+    
     #Set random seed
     np.random.seed(args.seed)
     random.seed(args.seed)
-    top_k = args.k
     
     # load data
     data = pd.read_csv(args.path+ "data_cp.csv", index_col=0)
@@ -55,12 +81,13 @@ def visualize_NN_test_predictions(args):
             # split train / test
             train_idx = target.index[train_i]
             test_idx = target.index[test_i]
+            # just use the first fold
             break
     elif args.split == 'scaffold':
         with open(args.path+ "scaffold_split_index.json", 'r') as f:
             index = json.load(f)   
         train_idx = index['train_idx']
-        test_idx = index['test_idx']#+index['stack_idx']
+        test_idx = index['test_idx']
     else:
         warn("Input argument split must be set to either 'scaffold' or 'cv' (default)")
     
@@ -74,7 +101,9 @@ def visualize_NN_test_predictions(args):
     
     #Sample anchor points
     anchors_idx = distance.loc[train_idx].sample(frac=args.anchor_percentage).index
-    if len(anchors_idx) > 2000:  # if takes too long. 
+    # If more than 2000 anchors, limit to 2000 to speeds up compuation with 
+    # little to no predictive performance cost
+    if len(anchors_idx) > 2000:  
         anchors_idx = distance.loc[train_idx].sample(n=2000).index
     
     # Sample training and testing distances
@@ -99,8 +128,6 @@ def visualize_NN_test_predictions(args):
     # MLKR Modeling
     mlkr = MLKR(max_iter=200, verbose=False, tol=1e-9, init='identity', random_state=args.seed)
     mlkr.fit(ecfp4.loc[train_idx], target.loc[train_idx])
-    x_tr_t = mlkr.transform(ecfp4.loc[train_idx])
-    x_tst_t = mlkr.transform(ecfp4.loc[test_idx])
     x_mlkr = mlkr.transform(ecfp4)
 
     
@@ -131,7 +158,7 @@ def visualize_NN_test_predictions(args):
     l['index1'] = l.index
     edges=[x for idx,x in l[['index1']+[i for i in range(args.k)]].iterrows()]
     edges=[le.transform(np.array(x.values)) for x in edges]
-    # Generate graph
+    # generate the graph based on NN/edge connections
     G=generate_graph_from_edges(edges,distance,le,threshold)
     # Plot graph
     nx.set_node_attributes(G, target[le.inverse_transform(G.nodes)])
@@ -149,8 +176,10 @@ def visualize_NN_test_predictions(args):
     l['index1'] = l.index
     edges=[x for idx,x in l[['index1']+[i for i in range(args.k)]].iterrows()]
     edges=[le.transform(np.array(x.values)) for x in edges]
+    # generate the graph based on NN/edge connections
     G=generate_graph_from_edges(edges,distance,le,threshold)
     nx.set_node_attributes(G, target[le.inverse_transform(G.nodes)])
+    # plot the grpah
     pos = nx.spring_layout(G,seed=args.seed) 
     nx.draw(G,pos=pos,node_color=target[le.inverse_transform(G.nodes)], vmin=vmin, vmax=vmax)
     components =  (G.subgraph(c) for c in nx.connected_components(G)) #analyze connected subgraphs
@@ -165,15 +194,17 @@ def visualize_NN_test_predictions(args):
     l['index1'] = l.index
     edges=[x for idx,x in l[['index1']+[i for i in range(args.k)]].iterrows()]
     edges=[le.transform(np.array(x.values)) for x in edges]
+    # generate the graph based on NN/edge connections
     G=generate_graph_from_edges(edges,distance,le,threshold)
     nx.set_node_attributes(G, target[le.inverse_transform(G.nodes)])
+    # plot the grpah
     pos = nx.spring_layout(G,seed=args.seed) 
-    im1 = nx.draw(G,pos=pos,node_color=target[le.inverse_transform(G.nodes)], vmin=vmin, vmax=vmax)
+    nx.draw(G,pos=pos,node_color=target[le.inverse_transform(G.nodes)], vmin=vmin, vmax=vmax)
     components =  (G.subgraph(c) for c in nx.connected_components(G)) #analyze connected subgraphs
     comp_dict_MLKRTest = {idx: comp.nodes() for idx, comp in enumerate(components)}
     ax.set_title("MLKR: Intercluster Std: {:.3f}".format(np.mean([target[le.inverse_transform(comp_dict_MLKRTest[i])].std() for i in range(len(comp_dict_MLKRTest))])), fontsize=25)
 
-    # Format Plot
+    # Formating and saving the figure
     fig1.suptitle('KNN Graph Clustering', fontsize=30)
     cbar_ax = fig1.add_axes([0.96, 0.05, 0.01, 0.90])
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin = vmin, vmax=vmax))

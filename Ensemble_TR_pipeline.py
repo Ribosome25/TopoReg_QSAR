@@ -1,3 +1,10 @@
+"""
+This code performs Ensemble TR on scaffold or CV split depending on input 
+arguments, see scripts/args ChemblPipelineArgsEnsemble for argument defaults 
+and details
+
+@author: Daniel Nolte
+"""
 import json
 import numpy as np
 import pandas as pd
@@ -11,6 +18,15 @@ from sklearn.model_selection import KFold
 from warnings import warn
 
 def Ensemble_TR_pipeline_scaffold(args: ChemblPipelineArgsEnsemble):
+    """
+    function to perform Ensemble TR on scaffold split and print the performance
+    metrics
+    
+    inputs args: ChemblPipelineArgsEnsemble
+    return: performance metrics as a list
+    prints: performance metrics
+    """
+    
     # Load data
     data = pd.read_csv(args.path+ "data_cp.csv", index_col=0)
     ecfp4 = pd.read_parquet(args.path+ "data_ECFP4.parquet", engine='fastparquet').astype('bool')
@@ -20,6 +36,7 @@ def Ensemble_TR_pipeline_scaffold(args: ChemblPipelineArgsEnsemble):
     distance = pd.DataFrame(distance, index=ecfp4.index, columns=ecfp4.index)
     # Sample anchor point percentages
     anchor_percentages = np.random.normal(args.mean_anchor_percentage,args.std_anchor_percentage,args.num_TR_models)
+    # Clip anchor percentages to assert validity and prevent under/overfitting
     anchor_percentages[anchor_percentages<0.3]=0.300
     anchor_percentages[anchor_percentages>0.9]=0.900
     # load indicies for scaffold split
@@ -34,6 +51,8 @@ def Ensemble_TR_pipeline_scaffold(args: ChemblPipelineArgsEnsemble):
         # Initialize model and sample anchor points
         mdl =LR(n_jobs=-1)
         anchors_idx = distance.loc[train_idx].sample(frac=anchor_percentage).index
+        # If more than 2000 anchors, limit to 2000 to speeds up compuation with 
+        # little to no predictive performance cost
         if len(anchors_idx) > 2000:  # if takes too long. 
             anchors_idx = distance.loc[train_idx].sample(n=2000).index
             
@@ -63,9 +82,18 @@ def Ensemble_TR_pipeline_scaffold(args: ChemblPipelineArgsEnsemble):
     print('R2: '+str(r2))
     print('RMSE: '+str(rmse))
     print('NRMSE: '+str(nrmse))
-    return scorr,r2,rmse,nrmse,predictedResponse
+    return [scorr,r2,rmse,nrmse]
     
 def Ensemble_TR_pipeline_cv(args: ChemblPipelineArgsEnsemble):
+    """
+    function to perform Ensemble TR on all CV folds and prints the 
+    average performance
+    
+    input args: ChemblPipelineArgsEnsemble
+    return: average performance metrics as a list
+    prints: performance metrics for each fold and average performance metrics
+    """
+    
     # Load data
     data = pd.read_csv(args.path+ "data_cp.csv", index_col=0)
     ecfp4 = pd.read_parquet(args.path+ "data_ECFP4.parquet", engine='fastparquet').astype('bool')
@@ -75,6 +103,7 @@ def Ensemble_TR_pipeline_cv(args: ChemblPipelineArgsEnsemble):
     distance = pd.DataFrame(distance, index=ecfp4.index, columns=ecfp4.index)
     
     anchor_percentages = np.random.normal(args.mean_anchor_percentage,args.std_anchor_percentage,args.num_TR_models)
+    # Clip anchor percentages to assert validity and prevent under/overfitting
     anchor_percentages[anchor_percentages<0.3]=0.300
     anchor_percentages[anchor_percentages>0.9]=0.900
     
@@ -92,6 +121,8 @@ def Ensemble_TR_pipeline_cv(args: ChemblPipelineArgsEnsemble):
             # Initialize model and sample anchor points
             mdl =LR(n_jobs=-1)
             anchors_idx = distance.loc[train_idx].sample(frac=anchor_percentage).index
+            # If more than 2000 anchors, limit to 2000 to speeds up compuation with 
+            # little to no predictive performance cost
             if len(anchors_idx) > 2000:  # if takes too long. 
                 anchors_idx = distance.loc[train_idx].sample(n=2000).index
                 

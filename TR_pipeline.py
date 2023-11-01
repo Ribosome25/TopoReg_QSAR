@@ -1,3 +1,10 @@
+"""
+This code performs TR on scaffold or CV split depending on input arguments, 
+see scripts/args ChemblPipelineArgs for argument defaults and details
+
+@author: Ruibo Zhang and Daniel Nolte 
+"""
+
 import json
 import numpy as np
 import pandas as pd
@@ -12,6 +19,14 @@ from warnings import warn
 
 
 def TR_pipeline_scaffold(args: ChemblPipelineArgs):
+    """
+    function perform TR on scaffold split and print the performance metrics
+    
+    input args: ChemblPipelineArgs
+    return: performance metrics as a list
+    prints: performance metrics
+    """
+    
     # Load data
     data = pd.read_csv(args.path+ "data_cp.csv", index_col=0)
     ecfp4 = pd.read_parquet(args.path+ "data_ECFP4.parquet", engine='fastparquet').astype('bool')
@@ -29,6 +44,8 @@ def TR_pipeline_scaffold(args: ChemblPipelineArgs):
     # Initialize model and sample anchor points
     mdl =LR(n_jobs=-1)
     anchors_idx = distance.loc[train_idx].sample(frac=args.anchor_percentage).index
+    # If more than 2000 anchors, limit to 2000 to speeds up compuation with 
+    # little to no predictive performance cost
     if len(anchors_idx) > 2000:  # if takes too long. 
         anchors_idx = distance.loc[train_idx].sample(n=2000).index
         
@@ -55,9 +72,17 @@ def TR_pipeline_scaffold(args: ChemblPipelineArgs):
     print('R2: '+str(r2))
     print('RMSE: '+str(rmse))
     print('NRMSE: '+str(nrmse))
-    return scorr,r2,rmse,nrmse,predictedResponse
+    return [scorr,r2,rmse,nrmse]
     
 def TR_pipeline_cv(args: ChemblPipelineArgs):
+    """
+    function to perform TR on all CV folds and report the average performance
+    
+    input args: ChemblPipelineArgs
+    return: average performance metrics as a list
+    prints: performance metrics for each fold and average performance metrics
+    """
+    
     # Load data
     data = pd.read_csv(args.path+ "data_cp.csv", index_col=0)
     ecfp4 = pd.read_parquet(args.path+ "data_ECFP4.parquet", engine='fastparquet').astype('bool')
@@ -78,6 +103,8 @@ def TR_pipeline_cv(args: ChemblPipelineArgs):
         # Initialize model and sample anchor points
         mdl =LR(n_jobs=-1)
         anchors_idx = distance.loc[train_idx].sample(frac=args.anchor_percentage).index
+        # If more than 2000 anchors, limit to 2000 to speeds up compuation with 
+        # little to no predictive performance cost
         if len(anchors_idx) > 2000:  # if takes too long. 
             anchors_idx = distance.loc[train_idx].sample(n=2000).index
             

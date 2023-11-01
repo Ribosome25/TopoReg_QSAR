@@ -1,3 +1,11 @@
+"""
+This code visualizes lead optimization pathways and training clusters with TR 
+predictions on scaffold or CV split depending on input arguments, see 
+scripts/args ChemblLeadOptVisualizationArgs for argument defaults and details
+
+@author: Daniel Nolte
+"""
+
 import json
 import numpy as np
 import pandas as pd
@@ -15,7 +23,18 @@ from rdkit.Chem import Draw
 from warnings import warn
 
 def generate_graph_from_edges(edges,distance,le,threshold):
-    G=nx.Graph() #create the graph and add edges
+    """
+    function to generate a graph from a list of edge connections based on 
+    threshold value
+    
+    inputs: edges: list of knn predictions
+            distance: pairwise distance between samples
+            le: label encoder to transform from interger to chembl id
+            threshold: mean threshold for distance cutoff
+    return: G, the calcualted networkx graph
+    """
+    
+    G=nx.Graph() #initialize the graph
     # For each sample, add its 5 NN edges based on threshold
     for e in edges:
         if (distance.loc[le.inverse_transform([e[0]]),le.inverse_transform([e[1]])].values <threshold)&(e[0]!=e[1]):
@@ -30,13 +49,32 @@ def generate_graph_from_edges(edges,distance,le,threshold):
             G.add_edge(e[0],e[5])
     return G
 def ax_disable_ticks(ax):
+    """
+    Function to turn off x and y axis ticks and spines for given ax
+    
+    input: ax: ax to modify
+    """
+    
     ax.get_xaxis().set_ticks([])
     ax.get_yaxis().set_ticks([])
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     ax.spines['bottom'].set_visible(False)
     ax.spines['left'].set_visible(False)
-def visualize_TR_leadopt(args):
+def visualize_TR_leadopt(args: ChemblLeadOptVisualizationArgs):
+    """
+    Function to visualize TR lead optimization pathways and training clusters
+    in the form of kNN-grpahs
+    
+    input: args: ChemblLeadOptVisualizationArgs
+    
+    saves a figure with 3 subplots, one with the training clusters, one with 
+    the minimum spanning tree of the most active cluster, and one with 5 
+    molecules from the minimum spanning path between the most active and least 
+    active molecules in the most active cluster
+    """
+    
+    # set font size
     font_size=16
     #Set random seed
     np.random.seed(args.seed)
@@ -81,13 +119,14 @@ def visualize_TR_leadopt(args):
     
     #Sample anchor points
     anchors_idx = distance.loc[train_idx].sample(frac=args.anchor_percentage).index
+    # If more than 2000 anchors, limit to 2000 to speeds up compuation with 
+    # little to no predictive performance cost
     if len(anchors_idx) > 2000:  # if takes too long. 
         anchors_idx = distance.loc[train_idx].sample(n=2000).index
     
     # Sample training and testing distances
     dist_x_train = distance.loc[train_idx, anchors_idx]
     dist_y_train = simple_y_train(target, anchors_idx, "euclidean", train_idx=train_idx) 
-    dist_test = distance.loc[test_idx, anchors_idx]
     
     # modelling 
     mdl.fit(dist_x_train, dist_y_train.T)
@@ -116,24 +155,25 @@ def visualize_TR_leadopt(args):
     # Label encoder to map between integer node names and chembl molecule names
     le=LabelEncoder()
     le.fit(data.index)
+    
     # Find all edges of KNN graph using TR NN predictions
     l=pd.DataFrame(top_idx_topo_train,index=train_idx)
     l['index1'] = l.index
     edges=[x for idx,x in l[['index1']+[i for i in range(top_k)]].iterrows()]
     edges=[le.transform(np.array(x.values)) for x in edges]
-    # Generate graph
+    # generate the graph based on NN/edge connections
     G=generate_graph_from_edges(edges,distance,le,threshold)
-    # Plot graph
     nx.set_node_attributes(G, target[le.inverse_transform(G.nodes)])
+    # Plot graph
     pos = nx.spring_layout(G,seed=args.seed) 
     nx.draw(G,ax=ax1,pos=pos,node_color=target[le.inverse_transform(G.nodes)], vmin=vmin, vmax=vmax)
     
     #analyze connected subgraphs
     components =  (G.subgraph(c) for c in nx.connected_components(G))
     comp_dict_knnTest = {idx: comp.nodes() for idx, comp in enumerate(components)}
+    
     # Find highest active component
     highestActiveComp= np.argmax([target[le.inverse_transform(comp_dict_knnTest[i])].mean() for i in range(len(comp_dict_knnTest))])
-
 
     #analyze active subgraph
     Gactive = G.subgraph(comp_dict_knnTest[highestActiveComp])
@@ -182,7 +222,7 @@ def visualize_TR_leadopt(args):
     fig2.subplots_adjust(left=0.00, bottom=0.00, top=0.96, right=1)
     fig2.canvas.draw()
     
-    # convert to image to plot with NN Graph subplots
+    # convert the figure to an image to plot with NN Graph subplots
     image_from_plot = np.frombuffer(fig2.canvas.tostring_rgb(), dtype=np.uint8)
     image_from_plot = image_from_plot.reshape(fig2.canvas.get_width_height()[::-1] + (3,))
     ax3.imshow(image_from_plot)
