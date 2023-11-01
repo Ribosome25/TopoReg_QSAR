@@ -11,10 +11,14 @@ import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--work_dir", type=str, default="SampleDatasets/ChEMBL")
-args = parser.parse_args()
-
+def txt_to_csv(wd="data/ChEMBL/"):
+    if os.path.exists(
+        os.path.join(wd, "data.txt")
+    ):
+        data = pd.read_table(os.path.join(wd, "data.txt"), index_col=0)
+        data.to_csv(os.path.join(wd, "data_cp.csv"))
+    else:
+        return
 
 def get_file_list(wd="data/ChEMBL/"):
     file_list = []
@@ -50,8 +54,15 @@ def convert(path: str):
     os.remove(path)
 #     print(path, "Finished.")
 
-file_list = get_file_list(args.work_dir)
-print(len(file_list))
 
-Parallel(n_jobs=-1, verbose=1)(delayed(convert)(path) for path in file_list)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--work_dir", type=str, default="SampleDatasets/ChEMBL")
+    args = parser.parse_args()
+
+    txt_to_csv(args.work_dir)
+    file_list = get_file_list(args.work_dir)
+    print(len(file_list))
+
+    Parallel(n_jobs=-1, verbose=1)(delayed(convert)(path) for path in file_list)
 
