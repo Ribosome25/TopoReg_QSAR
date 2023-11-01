@@ -59,7 +59,9 @@ def gen_morganfp(file_list: list, output_path: str):
             print("{} / {} mols are NaNs (cannot be found in RDKit) in {}.".format(count_na, ii, each_file))
         output = pd.DataFrame(arr, index=output_idx, columns=["FP_{}".format(ii) for ii in range(2048)])
         new_output_path = check_output_path(each_file, output_path, "_ECFP4")
-        output.to_parquet(new_output_path, engine='fastparquet', compression='gzip')
+        # print(new_output_path)
+        output.to_csv(new_output_path)
+        output.to_parquet(new_output_path.replace(".csv", ".parquet"), engine='fastparquet', compression='gzip')
 
 
 
