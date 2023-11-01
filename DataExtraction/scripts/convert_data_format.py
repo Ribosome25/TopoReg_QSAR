@@ -12,13 +12,13 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 
 def txt_to_csv(wd="data/ChEMBL/"):
-    if os.path.exists(
-        os.path.join(wd, "data.txt")
-    ):
-        data = pd.read_table(os.path.join(wd, "data.txt"), index_col=0)
+    path_txt_data = os.path.join(wd, "data.txt")
+    if os.path.exists(path_txt_data):
+        data = pd.read_table(path_txt_data, index_col=0)
         data.to_csv(os.path.join(wd, "data_cp.csv"))
+        os.remove(path_txt_data)
     else:
-        return
+        print("data.txt not found", path_txt_data)
 
 def get_file_list(wd="data/ChEMBL/"):
     file_list = []
