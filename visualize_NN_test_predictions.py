@@ -166,7 +166,7 @@ def visualize_NN_test_predictions(args: ChemblNNVisualizationArgs):
     nx.draw(G,pos=pos,node_color=target[le.inverse_transform(G.nodes)], vmin=vmin, vmax=vmax)
     components =  (G.subgraph(c) for c in nx.connected_components(G)) #analyze connected subgraphs
     comp_dict_trTest  = {idx: comp.nodes() for idx, comp in enumerate(components)}
-    ax.set_title("TR: Intercluster Std: {:.3f}".format(np.mean([target[le.inverse_transform(comp_dict_trTest[i])].std() for i in range(len(comp_dict_trTest))])), fontsize=25)
+    ax.set_title("TR: Within-cluster Std: {:.3f}".format(np.mean([target[le.inverse_transform(comp_dict_trTest[i])].std() for i in range(len(comp_dict_trTest))])), fontsize=25)
     
     # KNN Subpot
     sub_i = 131
@@ -184,7 +184,7 @@ def visualize_NN_test_predictions(args: ChemblNNVisualizationArgs):
     nx.draw(G,pos=pos,node_color=target[le.inverse_transform(G.nodes)], vmin=vmin, vmax=vmax)
     components =  (G.subgraph(c) for c in nx.connected_components(G)) #analyze connected subgraphs
     comp_dict_knnTest = {idx: comp.nodes() for idx, comp in enumerate(components)}
-    ax.set_title("KNN: Intercluster Std: {:.3f}".format(np.mean([target[le.inverse_transform(comp_dict_knnTest[i])].std() for i in range(len(comp_dict_knnTest))])), fontsize=25)
+    ax.set_title("KNN: Within-cluster Std: {:.3f}".format(np.mean([target[le.inverse_transform(comp_dict_knnTest[i])].std() for i in range(len(comp_dict_knnTest))])), fontsize=25)
     
     # MLKR Subpot
     sub_i = 132
@@ -202,10 +202,10 @@ def visualize_NN_test_predictions(args: ChemblNNVisualizationArgs):
     nx.draw(G,pos=pos,node_color=target[le.inverse_transform(G.nodes)], vmin=vmin, vmax=vmax)
     components =  (G.subgraph(c) for c in nx.connected_components(G)) #analyze connected subgraphs
     comp_dict_MLKRTest = {idx: comp.nodes() for idx, comp in enumerate(components)}
-    ax.set_title("MLKR: Intercluster Std: {:.3f}".format(np.mean([target[le.inverse_transform(comp_dict_MLKRTest[i])].std() for i in range(len(comp_dict_MLKRTest))])), fontsize=25)
+    ax.set_title("MLKR: Within-cluster Std: {:.3f}".format(np.mean([target[le.inverse_transform(comp_dict_MLKRTest[i])].std() for i in range(len(comp_dict_MLKRTest))])), fontsize=25)
 
     # Formating and saving the figure
-    fig1.suptitle('KNN Graph Clustering', fontsize=30)
+    fig1.suptitle('KNN Graph Clustering of target '+args.path.split("/")[-2] , fontsize=30)
     cbar_ax = fig1.add_axes([0.96, 0.05, 0.01, 0.90])
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin = vmin, vmax=vmax))
     cbar = fig1.colorbar(sm, cax=cbar_ax)
